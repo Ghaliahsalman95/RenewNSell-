@@ -72,7 +72,7 @@ You can view the presentation [here](https://www.canva.com/design/DAGEipSxZN0/64
 - `OrderService -getAllOrderByProductId(): List<OrderProduct>`
 - `OrderService -totalOrders(): int`
 
-    # ResponseFixProduct Model DTOResponseFixProduct
+    # ResponseFixProduct Model 
     -`DTOResponseFixProduct`
 
 - `ResponseFixProductService -getAll(): List<ResponseFixProduct>`
