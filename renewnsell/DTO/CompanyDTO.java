@@ -1,6 +1,7 @@
 package com.example.renewnsell.DTO;
 
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,16 +19,17 @@ public class CompanyDTO {
     @NotEmpty(message = "must not be empty")
     private String name;
 
+    @Email
     @NotEmpty(message = "must not be empty")
     private String email;
 
-    @NotEmpty(message = "must not be empty")
+    @NotEmpty(message = "phone must not be empty")
     private String phoneNumber;
 
     @NotEmpty(message = "commercial License must not be empty")
     private String commercialLicense;
-    @NotEmpty(message = "commercial License must not be empty")
+    @NotEmpty(message = "industry License must not be empty")
     private String industry;
-    @NotEmpty(message = "commercial License must not be empty")
+    @NotEmpty(message = "logoPath License must not be empty")
     private String logoPath;
 }

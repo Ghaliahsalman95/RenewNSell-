@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.*;
 
 @Service
@@ -61,18 +62,16 @@ public class OrderService {
     //================================= [BUY] METHOD DONE BY GHALIAH  ==============================
     public void buy(Integer userId, List<DTO_BUY> productIds) {
         /*we have 3 relation with OrderProduct
-        * First relation is ManyToMany between Order product and Product
-        * Second relation is OneToMany between OrderProduct and OrderCompany // this relation I use to divide
-        * each product to its company as order , so The benefit is [ distribution ]
-        * Third relations is OneToMany between OrderProduct and Customer
-        * */
+         * First relation is ManyToMany between Order product and Product
+         * Second relation is OneToMany between OrderProduct and OrderCompany // this relation I use to divide
+         * each product to its company as order , so The benefit is [ distribution ]
+         * Third relations is OneToMany between OrderProduct and Customer
+         * */
 
         Customer customer = customerRepository.findCustomersById(userId);
         OrderProduct orderProduct = new OrderProduct();
-        OrderCompany orderCompany = new OrderCompany();
-        orderCompany.setOrderProduct(orderProduct);
-        orderCompany.setStatus("PENDING");
-        orderCompany.setDate(LocalDate.now());
+        orderProduct.setStatus("PENDING");
+
         orderProduct.setCustomer(customer);
         Double totalPrices = 0.0;
         /////////////////////////////////////////////
@@ -86,13 +85,18 @@ public class OrderService {
         //=====
 
         orderRepository.save(orderProduct);//update //save order first then save updated product
-        orderCompany.setProducts(orderCompanySet);
-        orderCompanyRepository.save(orderCompany);
 
         ///
         for (DTO_BUY productId : productIds) {
             if (productRepository.findProductById(productId.getProductId()) == null)
                 throw new ApiException("One of product Not found");
+            OrderCompany orderCompany = new OrderCompany();
+            orderCompany.setProducts(orderCompanySet);
+            orderCompanyRepository.save(orderCompany);
+
+            orderCompany.setOrderProduct(orderProduct);
+            orderCompany.setStatus("PENDING");
+            orderCompany.setDate(LocalDate.now());
             Product product = productRepository.findProductById(productId.getProductId());
             orderCompany.setBuyWithFix(productId.isFix());//if customer wants fix product
             if (product.getQuantity() == 0) {
@@ -194,6 +198,7 @@ public class OrderService {
                     if (!orderCompany.getStatus().equalsIgnoreCase("PENDING")) {
                         order.setStatus("ORDER_CONFIRMED");
                         orderRepository.save(order);
+                        break;
                     } else throw new ApiException("some of product of some company not  still PENDING");
                 }
                 break;
@@ -203,6 +208,8 @@ public class OrderService {
                         if (!orderCompany.getStatus().equalsIgnoreCase("PENDING")) {
                             order.setStatus("PREPARING");
                             orderRepository.save(order);
+                            break;
+
                         } else {
                             throw new ApiException("some of product of some company not  still PENDING");
                         }
@@ -215,6 +222,8 @@ public class OrderService {
                         if (!orderCompany.getStatus().equalsIgnoreCase("PENDING")) {
                             order.setStatus("SHIPPED");
                             orderRepository.save(order);
+                            break;
+
                         } else {
                             throw new ApiException("some of product of some company not  still PENDING");
                         }
@@ -227,6 +236,8 @@ public class OrderService {
                         if (!orderCompany.getStatus().equalsIgnoreCase("PENDING")) {
                             order.setStatus("OUT_FOR_DELIVERY");
                             orderRepository.save(order);
+                            break;
+
                         } else {
                             throw new ApiException("some of product of some company not  still PENDING");
                         }
@@ -238,6 +249,8 @@ public class OrderService {
                     if (orderCompany.getStatus().equalsIgnoreCase("DELIVERED")) {
                         order.setStatus("DELIVERED");
                         orderRepository.save(order);
+                        break;
+
                     } else throw new ApiException("some of product of some company not  still DELIVERED");
                 }
                 break;
@@ -270,7 +283,7 @@ public class OrderService {
         if (orderProduct == null) {
             throw new ApiException("order don't found");
         }
-            return orderProduct.getStatus();
+        return orderProduct.getStatus();
 
     }
     //================================= [findAllByCustomer_Id  ] METHOD DONE BY GHALIAH  ==============================
@@ -310,5 +323,177 @@ public class OrderService {
         return true;
     }
 
+    // =============================== calculate total profit ========================
+
+    public Double getAllRevenueForWebsite(){
+
+        Double sum = 0.0;
+        List<OrderProduct> orderProducts = orderRepository.findAllByStatus("DELIVERED");
+        if (orderProducts.isEmpty()){
+            throw new ApiException("No record found ");
+        }
+        for (OrderProduct product : orderProducts){
+            if (!product.getOrderCompanySet().isEmpty()){
+
+                for (OrderCompany orderCompany : product.getOrderCompanySet() ){
+                    sum += product.getTotalPrice() - orderCompany.getTotalPrice();
+
+                }
+            }else {
+                sum += product.getTotalPrice();
+            }
+        }
+        return sum;
+    }
+
+    public Double getTodayRevenueForWebsite(){
+
+        Double sum = 0.0;
+        List<OrderProduct> orderProducts = orderRepository.findAllByStatusAndDate();
+        if (orderProducts.isEmpty()){
+            throw new ApiException("No record found ");
+        }
+        for (OrderProduct product : orderProducts){
+            if (!product.getOrderCompanySet().isEmpty()){
+
+                for (OrderCompany orderCompany : product.getOrderCompanySet() ){
+                    sum += product.getTotalPrice() - orderCompany.getTotalPrice();
+
+                }
+            }else {
+                sum += product.getTotalPrice();
+            }
+        }
+        return sum;
+    }
+
+    public Double getCurrentMonthRevenueForWebsite(){
+
+        Double sum = 0.0;
+        List<OrderProduct> orderProducts = orderRepository.findOrdersCurrentMonth();
+        if (orderProducts.isEmpty()){
+            throw new ApiException("No record found ");
+        }
+        for (OrderProduct product : orderProducts){
+            if (!product.getOrderCompanySet().isEmpty()){
+
+                for (OrderCompany orderCompany : product.getOrderCompanySet() ){
+                    sum += product.getTotalPrice() - orderCompany.getTotalPrice();
+
+                }
+            }else {
+                sum += product.getTotalPrice();
+            }
+        }
+        return sum;
+    }
+
+    public Double getLastMonthRevenueForWebsite(){
+
+        LocalDate currentDate = LocalDate.now();
+        YearMonth lastMonthYearMonth = YearMonth.from(currentDate).minusMonths(1);
+        int lastMonthYear = lastMonthYearMonth.getYear();
+        int lastMonth = lastMonthYearMonth.getMonthValue();
+        Double sum = 0.0;
+        List<OrderProduct> orderProducts = orderRepository.findDeliveredOrdersLastMonth(lastMonthYear, lastMonth);
+        if (orderProducts.isEmpty()){
+            throw new ApiException("No record found ");
+        }
+        for (OrderProduct product : orderProducts){
+            if (!product.getOrderCompanySet().isEmpty()){
+
+                for (OrderCompany orderCompany : product.getOrderCompanySet() ){
+                    sum += product.getTotalPrice() - orderCompany.getTotalPrice();
+
+                }
+            }else {
+                sum += product.getTotalPrice();
+            }
+        }
+        return sum;
+    }
+
+    public Integer countAllProductSoldForWebsite(){
+
+        Integer count = 0;
+        List<OrderProduct> orderProducts = orderRepository.findAllByStatus("DELIVERED");
+        if (orderProducts.isEmpty()){
+            throw new ApiException("No record found ");
+        }
+        for (OrderProduct product : orderProducts){
+            if (!product.getOrderCompanySet().isEmpty()){
+
+                    count += product.getTotalItems();
+
+
+            }else {
+                count += 1;
+            }
+        }
+        return count;
+    }
+
+    public Integer countTodayProductSoldForWebsite(){
+
+        Integer count = 0;
+        List<OrderProduct> orderProducts = orderRepository.findAllByStatusAndDate();
+        if (orderProducts.isEmpty()){
+            throw new ApiException("No record found ");
+        }
+        for (OrderProduct product : orderProducts){
+            if (!product.getOrderCompanySet().isEmpty()){
+
+                count += product.getTotalItems();
+
+
+            }else {
+                count += 1;
+            }
+        }
+        return count;
+    }
+
+    public Integer countCurrentMonthProductSoldForWebsite(){
+
+        Integer count = 0;
+        List<OrderProduct> orderProducts = orderRepository.findOrdersCurrentMonth();
+        if (orderProducts.isEmpty()){
+            throw new ApiException("No record found ");
+        }
+        for (OrderProduct product : orderProducts){
+            if (!product.getOrderCompanySet().isEmpty()){
+
+                count += product.getTotalItems();
+
+
+            }else {
+                count += 1;
+            }
+        }
+        return count;
+    }
+
+    public Integer countLastMonthProductSoldForWebsite(){
+        LocalDate currentDate = LocalDate.now();
+        YearMonth lastMonthYearMonth = YearMonth.from(currentDate).minusMonths(1);
+        int lastMonthYear = lastMonthYearMonth.getYear();
+        int lastMonth = lastMonthYearMonth.getMonthValue();
+        Integer count = 0;
+        List<OrderProduct> orderProducts = orderRepository.findDeliveredOrdersLastMonth(lastMonthYear, lastMonth);
+        if (orderProducts.isEmpty()){
+            throw new ApiException("No record found ");
+        }
+        for (OrderProduct product : orderProducts){
+            if (!product.getOrderCompanySet().isEmpty()){
+
+                count += product.getTotalItems();
+
+
+            }else {
+                count += 1;
+            }
+        }
+        return count;
+    }
 
 }

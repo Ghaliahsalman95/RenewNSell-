@@ -17,8 +17,8 @@ import java.util.List;
 public class ResponseFixProductService {
 
     private final ResponseFixProductRepository responseFixProductRepository;
-private final FixProductRepository fixProductRepository;
-private final OrderRepository orderRepository;
+    private final FixProductRepository fixProductRepository;
+    private final OrderRepository orderRepository;
 
     public List<ResponseFixProduct> getAll() {
         if (responseFixProductRepository.findAll().isEmpty())
@@ -48,32 +48,36 @@ private final OrderRepository orderRepository;
         responseFixProductRepository.save(responseFixProduct1);
     }
 
-public void delete(Integer id){
-    ResponseFixProduct responseFixProduct = responseFixProductRepository.findResponseFixProductById(id);
-    if (responseFixProduct == null) throw new ApiException("Not found");
-responseFixProductRepository.delete(responseFixProduct);
-}
+    public void delete(Integer id){
+        ResponseFixProduct responseFixProduct = responseFixProductRepository.findResponseFixProductById(id);
+        if (responseFixProduct == null) throw new ApiException("Not found");
+        responseFixProductRepository.delete(responseFixProduct);
+    }
 //================================= ALL CRUD DONE BY GHALIAH  ==============================
 
     //=================================RESPONSE REQUEST FIX PRODUCT FROM EMPLOYEE DONE BY GHALIAH  ==============================
-public void response(Integer fixProductId,DTOResponseFixProduct responseFixProductPostMan) {
-    OrderProduct orderProduct = orderRepository.findOrderProductById(fixProductId);
-    if (orderProduct.getFixProduct()==null) {
-        throw new ApiException("FixProduct not found");
-    }
-    ResponseFixProduct responseFixProduct=orderProduct.getFixProduct().getResponseFixProduct();
-    FixProduct fixProduct=orderProduct.getFixProduct();
-    responseFixProduct.setDescription(responseFixProductPostMan.getDescription());
-    responseFixProduct.setPrice(responseFixProductPostMan.getPrice());
-    orderProduct.setTotalItems(1);
-    orderProduct.setTotalPrice(responseFixProductPostMan.getPrice());
-    orderProduct.setFixProduct(fixProduct);
-    responseFixProduct.setFixProduct(fixProduct);
-    orderRepository.save(orderProduct);
-    fixProductRepository.save(fixProduct);
-    responseFixProductRepository.save(responseFixProduct);
+    public void response(Integer fixProductId,DTOResponseFixProduct responseFixProductPostMan) {
+        OrderProduct orderProduct = orderRepository.findOrderProductById(fixProductId);
+        if (orderProduct==null){
+            throw new ApiException("FixProduct not found");
 
-}
+        }
+        if (orderProduct.getFixProduct()==null) {
+            throw new ApiException("FixProduct not found");
+        }
+        ResponseFixProduct responseFixProduct=orderProduct.getFixProduct().getResponseFixProduct();
+        FixProduct fixProduct=orderProduct.getFixProduct();
+        responseFixProduct.setDescription(responseFixProductPostMan.getDescription());
+        responseFixProduct.setPrice(responseFixProductPostMan.getPrice());
+        orderProduct.setTotalItems(1);
+        orderProduct.setTotalPrice(responseFixProductPostMan.getPrice());
+        orderProduct.setFixProduct(fixProduct);
+        responseFixProduct.setFixProduct(fixProduct);
+        orderRepository.save(orderProduct);
+        fixProductRepository.save(fixProduct);
+        responseFixProductRepository.save(responseFixProduct);
+
+    }
 
 }
 

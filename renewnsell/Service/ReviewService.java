@@ -157,7 +157,7 @@ public class ReviewService {
 
     //7
     public List<Review> bestEvaluationCompany() {
-        List<Review> reviews = reviewRepository.searchTopByEvaluation();
+        List<Review> reviews = reviewRepository.findAll();
         List<Review> newRList = new ArrayList<>();
 
         if (reviews.isEmpty()) {
@@ -170,9 +170,8 @@ public class ReviewService {
                 Review NowR = reviews.get(i);
                 boolean added = false; // انه مانضاف
 
-
                 for (int j = 0; j < newRList.size(); j++) {
-                    if (NowR.getRating() <= newRList.get(j).getRating()) {
+                    if (NowR.getRating() >= newRList.get(j).getRating()) {
                         newRList.add(j, NowR);
                         added = true;
                         break;

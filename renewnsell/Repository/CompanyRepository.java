@@ -10,8 +10,8 @@ public interface CompanyRepository extends JpaRepository<Company, Integer> {
 
     Company findCompanyById(Integer id);
 
-    @Query("select c from Company c where c.user.name=?1")
-    Company findCompanyByName(String name);
+@Query("select c from Company c where c.user.name=?1")
+Company findCompanyByName(String name);
 
 
 }
