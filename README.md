@@ -24,7 +24,7 @@ You can view the presentation [here](https://www.canva.com/design/DAGEipSxZN0/64
 
 ## My Work
 
-  ## FixProduct Model
+  # FixProduct Model
   
 - `FixProductService  -getAll()`
 - `FixProductService  -addFixProduct():void`
@@ -37,7 +37,7 @@ You can view the presentation [here](https://www.canva.com/design/DAGEipSxZN0/64
 - `FixProductService  -changeStatus():`
 
   
-  ## OrderCompany Model
+  # OrderCompany Model
   
 - `OrderCompanyService -getAll()`
 - `OrderCompanyService -add(): void`
@@ -53,7 +53,7 @@ You can view the presentation [here](https://www.canva.com/design/DAGEipSxZN0/64
 - `OrderCompanyService -getTotalNumberOrdersForOneProduct(): int`
   
 
-  ## OrderProduct Model
+  # OrderProduct Model
   
 - `OrderService -getAll(): List<OrderProduct>`
 - `OrderService -addOrder(): void`
@@ -69,7 +69,7 @@ You can view the presentation [here](https://www.canva.com/design/DAGEipSxZN0/64
 - `OrderService -getAllOrderByProductId(): List<OrderProduct>`
 - `OrderService -totalOrders(): int`
 
-    ## ResponseFixProduct Model
+    # ResponseFixProduct Model
   
 - `ResponseFixProductService -getAll(): List<ResponseFixProduct>`
 - `ResponseFixProductService -add(): void`
