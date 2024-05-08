@@ -9,6 +9,7 @@ You can view the class diagram [here](https://drive.google.com/file/d/1adlykwsfl
 
 ## Use Case
 
+![UseCaseFinalProject_4 drawio](https://github.com/Ghaliahsalman95/RenewNSell-/assets/159685763/04009fd4-c1b0-4dfc-ab53-39a7ad592cb7)
 
 
 You can view the use case diagram [here](link_to_use_case).
