@@ -24,7 +24,9 @@ You can view the presentation [here](https://www.canva.com/design/DAGEipSxZN0/64
 
 ## My Work Models with its endpoints and with its authorization
 
-  # FixProduct Model
+  # FixProduct Model - 
+-`FixProductDTO`
+  
   
 - `FixProductService  -getAll()`
 - `FixProductService  -addFixProduct():void`
@@ -54,6 +56,7 @@ You can view the presentation [here](https://www.canva.com/design/DAGEipSxZN0/64
   
 
   # OrderProduct Model
+  -`DTO_BUY`
   
 - `OrderService -getAll(): List<OrderProduct>`
 - `OrderService -addOrder(): void`
@@ -69,8 +72,9 @@ You can view the presentation [here](https://www.canva.com/design/DAGEipSxZN0/64
 - `OrderService -getAllOrderByProductId(): List<OrderProduct>`
 - `OrderService -totalOrders(): int`
 
-    # ResponseFixProduct Model
-  
+    # ResponseFixProduct Model DTOResponseFixProduct
+    -`DTOResponseFixProduct`
+
 - `ResponseFixProductService -getAll(): List<ResponseFixProduct>`
 - `ResponseFixProductService -add(): void`
 - `ResponseFixProductService -update(): void`
