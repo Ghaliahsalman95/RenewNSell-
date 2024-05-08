@@ -22,7 +22,7 @@ You can view the Figma design [here](https://www.figma.com/file/UCHM3h9HjDvOea3p
 
 You can view the presentation [here](https://www.canva.com/design/DAGEipSxZN0/646HXCCE4gTsssZVUNkWrw/edit?utm_content=DAGEipSxZN0&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton).
 
-## My Work Models with its endpoints
+## My Work Models with its endpoints and with its authorization
 
   # FixProduct Model
   
@@ -30,7 +30,7 @@ You can view the presentation [here](https://www.canva.com/design/DAGEipSxZN0/64
 - `FixProductService  -addFixProduct():void`
 - `FixProductService  -update():void`
 - `FixProductService  -delete()`
-
+  
 - `FixProductService  -acceptPriceFixProduct()`
 - `FixProductService  -rejectPriceFixProduct()`
 - `FixProductService  -getFixProductOne(): FixProduct`
