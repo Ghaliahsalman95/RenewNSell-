@@ -22,11 +22,12 @@ You can view the Figma design [here](https://www.figma.com/file/UCHM3h9HjDvOea3p
 
 You can view the presentation [here](https://www.canva.com/design/DAGEipSxZN0/646HXCCE4gTsssZVUNkWrw/edit?utm_content=DAGEipSxZN0&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton).
 
-## My Work Models with its endpoints and with its authorization
+## My Work Models with its endpoints and with its authorization [Security springboot Configuration]
 
   # FixProduct Model - 
 -`FixProductDTO`
-  
+-`FixProductController`
+
   
 - `FixProductService  -getAll()`
 - `FixProductService  -addFixProduct():void`
@@ -40,7 +41,8 @@ You can view the presentation [here](https://www.canva.com/design/DAGEipSxZN0/64
 
   
   # OrderCompany Model
-  
+  -`OrderCompanytController`
+
 - `OrderCompanyService -getAll()`
 - `OrderCompanyService -add(): void`
 - `OrderCompanyService -update(): void`
@@ -56,8 +58,9 @@ You can view the presentation [here](https://www.canva.com/design/DAGEipSxZN0/64
   
 
   # OrderProduct Model
-  -`DTO_BUY`
-  
+ -`DTO_BUY`
+ -`OrderProductController`
+
 - `OrderService -getAll(): List<OrderProduct>`
 - `OrderService -addOrder(): void`
 - `OrderService -updateOrder(): void`
@@ -73,7 +76,8 @@ You can view the presentation [here](https://www.canva.com/design/DAGEipSxZN0/64
 - `OrderService -totalOrders(): int`
 
     # ResponseFixProduct Model 
-    -`DTOResponseFixProduct`
+  -`DTOResponseFixProduct`
+  -`ResponseFixProductController`
 
 - `ResponseFixProductService -getAll(): List<ResponseFixProduct>`
 - `ResponseFixProductService -add(): void`
